@@ -1,0 +1,957 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fffbf3">
+  <meta name="description" content="Crawling Labyrinth Academy — LR. 리아">
+  <title>C.L. 아카데미 | Crawling Labyrinth Academy</title>
+
+  <!-- 픽셀 폰트 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+
+
+    :root {
+      --paper: #fffbf3;
+      --surface: #f6f6f6;
+      --main: #d8b38a;
+      --accent: #f7d18c;
+      --lime: #e9ffcd;
+      --ink: #70543b;
+      --line: #d8b38a;
+      --muted: #a28b72;
+      --pixel: "DotGothic16", sans-serif;
+      --pixel-en: "Press Start 2P", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-color: var(--main) var(--surface);
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--pixel);
+      font-size: 14px;
+      line-height: 1.8;
+      image-rendering: pixelated;
+      overflow-wrap: anywhere;
+    }
+
+    button,
+    input,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    summary:focus-visible {
+      outline: 2px dashed var(--main);
+      outline-offset: 4px;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: var(--ink);
+    }
+
+    /* 공통 픽셀 장식 */
+
+    .pixel-mark {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      box-shadow: 8px 0 var(--main);
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+
+    .tiny-label {
+      font-family: var(--pixel-en);
+      font-size: 9px;
+      line-height: 1.8;
+      letter-spacing: 0;
+      color: var(--muted);
+    }
+
+    .en {
+      font-family: var(--pixel-en);
+      font-size: 9px;
+      line-height: 1.8;
+    }
+
+    /* 우측 상단 음악 버튼 */
+
+    .music-link {
+      position: absolute;
+      z-index: 5;
+      top: 18px;
+      right: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 30px;
+      padding: 4px 10px;
+      border: 1px solid var(--main);
+      background: var(--main);
+      color: #ffffff;
+      font-size: 11px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .music-link:hover {
+      background: var(--accent);
+      color: var(--ink);
+    }
+
+    /* 상단 배너 */
+
+    .hero {
+      position: relative;
+      width: 100%;
+      padding: clamp(70px, 11vw, 130px) 20px 36px;
+      background: var(--surface);
+      border-bottom: 2px solid var(--main);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      box-shadow:
+        12px 0 var(--main),
+        0 12px var(--main);
+      opacity: 0.8;
+    }
+
+    .hero::before {
+      top: 24px;
+      left: 24px;
+    }
+
+    .hero::after {
+      right: 36px;
+      bottom: 24px;
+      transform: rotate(180deg);
+    }
+
+    .hero-eyebrow {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-family: var(--pixel-en);
+      font-size: clamp(8px, 1.2vw, 11px);
+      letter-spacing: 0;
+    }
+
+    .hero-title {
+      margin: 0;
+      color: var(--main);
+      font-family: var(--pixel);
+      font-size: clamp(30px, 7vw, 66px);
+      font-weight: normal;
+      line-height: 1.45;
+      letter-spacing: -2px;
+      text-shadow: 3px 3px 0 var(--accent);
+    }
+
+    .hero-english {
+      margin: 16px auto 0;
+      max-width: 700px;
+      color: var(--muted);
+      font-family: var(--pixel-en);
+      font-size: clamp(8px, 1.2vw, 11px);
+      line-height: 2.2;
+      overflow-wrap: anywhere;
+    }
+
+    .hero-divider {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin: 26px auto 20px;
+    }
+
+    .hero-divider span {
+      width: 8px;
+      height: 8px;
+      background: var(--main);
+    }
+
+    .hero-divider span:nth-child(2),
+    .hero-divider span:nth-child(4) {
+      background: var(--accent);
+    }
+
+    .hero-divider span:nth-child(3) {
+      width: 12px;
+      height: 12px;
+      background: var(--lime);
+      border: 1px solid var(--main);
+    }
+
+    .hero-credit {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .hero-credit strong {
+      color: var(--ink);
+      font-weight: normal;
+    }
+
+    /* 본문 레이아웃 */
+
+    .page-wrap {
+      width: min(100% - 32px, 760px);
+      margin: 0 auto;
+    }
+
+    .archive {
+      padding: 46px 0 60px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 13px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--main);
+    }
+
+    .section-heading h2 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+      font-size: 16px;
+      font-weight: normal;
+    }
+
+    .section-heading .en {
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .archive-note {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* 회차 목록 */
+
+    .episode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .episode {
+      display: block;
+      border: 1px solid #ead8c3;
+      background: var(--paper);
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .episode:hover {
+      border-color: var(--main);
+      background: var(--surface);
+    }
+
+    .episode.latest {
+      border-color: var(--main);
+      border-left: 4px solid var(--accent);
+    }
+
+    .episode-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 54px;
+      padding: 10px 12px;
+    }
+
+    .episode-number {
+      flex-shrink: 0;
+      min-width: 44px;
+      color: var(--main);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .episode-title {
+      flex: 1;
+      min-width: 0;
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .episode-title::before {
+      content: "“";
+      color: var(--main);
+    }
+
+    .episode-title::after {
+      content: "”";
+      color: var(--main);
+    }
+
+    .episode-go {
+      display: inline-flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      height: 30px;
+      padding: 0 8px;
+      background: var(--main);
+      color: #ffffff;
+      border: 1px solid var(--main);
+      font-size: 12px;
+      transition: background 0.15s;
+    }
+
+    .episode-go:hover {
+      background: #b9956f;
+    }
+
+    /* 업로드 일자 및 소제목 펼치기 */
+
+    .episode-info {
+      margin: 0 12px 10px;
+      border-top: 1px dashed #ead8c3;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .episode-info summary {
+      padding: 7px 0 0;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .episode-info summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .episode-info summary::after {
+      content: "+";
+      color: var(--main);
+      font-size: 15px;
+    }
+
+    .episode-info[open] summary::after {
+      content: "−";
+    }
+
+    .episode-info-content {
+      padding: 8px 0 2px;
+      line-height: 2;
+    }
+
+    .episode-info-content span {
+      display: block;
+    }
+
+    .episode-info-content .info-date {
+      color: var(--main);
+    }
+
+    /* 회차가 없을 때 */
+
+    .empty-state {
+      padding: 32px 16px;
+      border: 1px dashed var(--main);
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* 하단 장식 */
+
+    .bottom-decoration {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin: 36px 0;
+    }
+
+    .bottom-decoration span {
+      width: 6px;
+      height: 6px;
+      background: var(--main);
+    }
+
+    .bottom-decoration span:nth-child(2) {
+      background: var(--accent);
+    }
+
+    .bottom-decoration span:nth-child(3) {
+      width: 10px;
+      height: 10px;
+      background: var(--lime);
+      border: 1px solid var(--main);
+    }
+
+    /* 푸터 */
+
+    .site-footer {
+      padding: 28px 16px 34px;
+      border-top: 1px solid var(--main);
+      background: var(--surface);
+      text-align: center;
+    }
+
+    .footer-title {
+      margin: 0 0 10px;
+      color: var(--main);
+      font-family: var(--pixel-en);
+      font-size: 9px;
+      line-height: 2;
+    }
+
+    .footer-credit {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 2.2;
+    }
+
+    .footer-copy {
+      margin: 16px 0 0;
+      color: #b9a994;
+      font-family: var(--pixel-en);
+      font-size: 8px;
+    }
+
+    /* 비밀번호 입장 화면 */
+
+    .gate {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: var(--paper);
+    }
+
+    .gate-panel {
+      width: min(100%, 390px);
+      padding: 32px 24px;
+      border: 1px solid var(--main);
+      border-top: 4px solid var(--accent);
+      background: var(--surface);
+      text-align: center;
+    }
+
+    .gate-icon {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .gate-icon span {
+      display: block;
+      width: 12px;
+      height: 12px;
+      background: var(--main);
+      box-shadow:
+        12px 0 var(--accent),
+        0 12px var(--accent),
+        12px 12px var(--main);
+    }
+
+    .gate-title {
+      margin: 0;
+      color: var(--main);
+      font-size: 25px;
+      font-weight: normal;
+    }
+
+    .gate-subtitle {
+      margin: 12px 0 26px;
+      color: var(--muted);
+      font-family: var(--pixel-en);
+      font-size: 8px;
+      line-height: 2.2;
+    }
+
+    .gate-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: left;
+    }
+
+    .gate-input {
+      display: block;
+      width: 100%;
+      height: 46px;
+      padding: 8px 12px;
+      border: 1px solid var(--main);
+      border-radius: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--pixel-en);
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 5px;
+    }
+
+    .gate-submit {
+      width: 100%;
+      margin-top: 12px;
+      min-height: 42px;
+      border: 1px solid var(--main);
+      border-radius: 0;
+      background: var(--main);
+      color: #ffffff;
+      font-size: 13px;
+      transition: background 0.15s;
+    }
+
+    .gate-submit:hover {
+      background: #b9956f;
+    }
+
+    .gate-error {
+      min-height: 24px;
+      margin: 10px 0 0;
+      color: #a36d49;
+      font-size: 11px;
+    }
+
+    .gate-credit {
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
+    /* 작은 화면 */
+
+    @media (max-width: 480px) {
+      body {
+        font-size: 13px;
+      }
+
+      .music-link {
+        top: 12px;
+        right: 12px;
+      }
+
+      .hero {
+        padding-right: 14px;
+        padding-left: 14px;
+      }
+
+      .hero-title {
+        letter-spacing: -1px;
+      }
+
+      .hero-english {
+        max-width: 300px;
+      }
+
+      .page-wrap {
+        width: calc(100% - 24px);
+      }
+
+      .archive {
+        padding-top: 32px;
+      }
+
+      .episode-main {
+        gap: 8px;
+        padding: 9px 8px;
+      }
+
+      .episode-number {
+        min-width: 40px;
+        font-size: 12px;
+      }
+
+      .episode-title {
+        font-size: 13px;
+      }
+
+      .episode-go {
+        min-width: 30px;
+        height: 28px;
+      }
+
+      .episode-info {
+        margin-right: 8px;
+        margin-left: 8px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <!-- 비밀번호 입장 화면 -->
+  <section class="gate" id="passwordGate">
+    <div class="gate-panel">
+      <div class="gate-icon" aria-hidden="true">
+        <span></span>
+      </div>
+
+      <p class="tiny-label">RESTRICTED ARCHIVE</p>
+      <h1 class="gate-title">C.L. 아카데미</h1>
+
+      <p class="gate-subtitle">
+        CRAWLING LABYRINTH ACADEMY<br>
+        ENTER THE ARCHIVE
+      </p>
+
+      <form id="passwordForm">
+        <label class="gate-label" for="passwordInput">
+          입장 비밀번호를 입력해 줘.
+        </label>
+
+        <input
+          class="gate-input"
+          id="passwordInput"
+          type="password"
+          inputmode="numeric"
+          maxlength="4"
+          autocomplete="off"
+          placeholder="****"
+          required
+        >
+
+        <button class="gate-submit" type="submit">
+          ▶ 기록 열람하기
+        </button>
+
+        <p class="gate-error" id="passwordError" aria-live="polite"></p>
+      </form>
+
+      <p class="gate-credit">
+        AUTHOR : LR. 리아
+      </p>
+    </div>
+  </section>
+
+
+  <!-- 사이트 전체 -->
+  <div id="siteContent" class="is-hidden">
+
+    <!-- 상단 배너 -->
+    <header class="hero">
+
+      <!-- 음악 플레이리스트 링크 -->
+      <a
+        class="music-link"
+        id="musicLink"
+        href="https://www.youtube.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ♫ 음악 듣기
+      </a>
+
+      <p class="hero-eyebrow">
+        CRAWLING LABYRINTH
+      </p>
+
+      <h1 class="hero-title">
+        C.L. 아카데미
+      </h1>
+
+      <p class="hero-english">
+        Crawling Labyrinth Academy
+      </p>
+
+      <div class="hero-divider" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <p class="hero-credit">
+        작가 <strong>LR. 리아</strong>
+        <span aria-hidden="true">　|　</span>
+        With. <strong>기어와 클랜</strong>
+      </p>
+
+    </header>
+
+
+    <!-- 회차 아카이브 -->
+    <main class="page-wrap">
+      <section class="archive" id="archive">
+
+        <div class="section-heading">
+          <h2>
+            <span class="pixel-mark" aria-hidden="true"></span>
+            연재 목록
+          </h2>
+
+          <span class="en">EPISODE ARCHIVE</span>
+        </div>
+
+        <p class="archive-note">
+          기록을 선택하면 해당 회차로 이동할 수 있어.
+        </p>
+
+
+        <!--
+          회차 추가 방법:
+          아래 episode 블록 전체를 복사해서
+          이 목록 안에 붙여 넣으면 돼.
+          최신화는 목록의 가장 위에 배치해 줘.
+        -->
+
+        <div class="episode-list" id="episodeList">
+
+
+          <!-- 최신화 예시 -->
+          <article class="episode latest">
+
+            <div class="episode-main">
+              <span class="episode-number">01화</span>
+
+              <span class="episode-title">
+                첫 번째 기록
+              </span>
+
+              <a
+                class="episode-go"
+                href="#"
+                aria-label="1화 읽기"
+              >▶</a>
+            </div>
+
+            <details class="episode-info">
+              <summary>
+                업로드 일자 및 소제목
+              </summary>
+
+              <div class="episode-info-content">
+                <span class="info-date">
+                  업로드 일자 : 2026. 00. 00.
+                </span>
+
+                <span>
+                  소제목 : 첫 번째 기록
+                </span>
+              </div>
+            </details>
+
+          </article>
+
+
+          <!-- 두 번째 회차 예시 -->
+          <article class="episode">
+
+            <div class="episode-main">
+              <span class="episode-number">00화</span>
+
+              <span class="episode-title">
+                회차 제목
+              </span>
+
+              <a
+                class="episode-go"
+                href="#"
+                aria-label="회차 읽기"
+              >▶</a>
+            </div>
+
+            <details class="episode-info">
+              <summary>
+                업로드 일자 및 소제목
+              </summary>
+
+              <div class="episode-info-content">
+                <span class="info-date">
+                  업로드 일자 : 미정
+                </span>
+
+                <span>
+                  소제목 : 미정
+                </span>
+              </div>
+            </details>
+
+          </article>
+
+
+        </div>
+      </section>
+
+      <div class="bottom-decoration" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+    </main>
+
+
+    <!-- 하단 크레딧 -->
+    <footer class="site-footer">
+
+      <p class="footer-title">
+        CRAWLING LABYRINTH ACADEMY
+      </p>
+
+      <p class="footer-credit">
+        작가　LR. 리아<br>
+        With. 기어와 클랜
+      </p>
+
+      <p class="footer-copy">
+        END OF RECORD
+      </p>
+
+    </footer>
+
+  </div>
+
+
+  <script>
+    // ========================================
+    // C.L. ACADEMY : SITE SETTINGS
+    // ========================================
+
+    // 입장 비밀번호
+    const SITE_PASSWORD = "0107";
+
+    // 음악 플레이리스트 주소
+    // 아래 주소를 원하는 플레이리스트 URL로 바꿔 줘.
+    const PLAYLIST_URL = "https://www.youtube.com/";
+
+    // ========================================
+    // PASSWORD GATE
+    // ========================================
+
+    const passwordGate = document.getElementById("passwordGate");
+    const passwordForm = document.getElementById("passwordForm");
+    const passwordInput = document.getElementById("passwordInput");
+    const passwordError = document.getElementById("passwordError");
+    const siteContent = document.getElementById("siteContent");
+
+    passwordForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      if (passwordInput.value === SITE_PASSWORD) {
+        passwordGate.classList.add("is-hidden");
+        siteContent.classList.remove("is-hidden");
+        passwordError.textContent = "";
+
+        // 입장 후 입력창의 비밀번호를 비워 둠
+        passwordInput.value = "";
+
+        // 본문으로 이동하지 않고 상단부터 표시
+        window.scrollTo(0, 0);
+      } else {
+        passwordError.textContent = "비밀번호가 올바르지 않아.";
+        passwordInput.value = "";
+        passwordInput.focus();
+      }
+    });
+
+    // ========================================
+    // MUSIC PLAYLIST
+    // ========================================
+
+    const musicLink = document.getElementById("musicLink");
+    musicLink.href = PLAYLIST_URL;
+
+    // ========================================
+    // EPISODE ARCHIVE
+    // ========================================
+
+    // 회차 제목 및 링크는 HTML에서 직접 편집하면 돼.
+    // 최신화는 episode-list의 가장 위에 배치해 줘.
+
+    // 회차 정보 하나를 열면 다른 회차 정보는 닫기
+    const episodeList = document.getElementById("episodeList");
+
+    episodeList.addEventListener("toggle", function (event) {
+      const currentDetails = event.target;
+
+      if (
+        currentDetails.tagName !== "DETAILS" ||
+        !currentDetails.open
+      ) {
+        return;
+      }
+
+      episodeList.querySelectorAll(".episode-info[open]").forEach(
+        function (details) {
+          if (details !== currentDetails) {
+            details.open = false;
+          }
+        }
+      );
+    }, true);
+
+  </script>
+</body>
+</html>
