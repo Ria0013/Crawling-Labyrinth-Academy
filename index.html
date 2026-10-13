@@ -665,7 +665,7 @@
 
       <form id="passwordForm">
         <label class="gate-label" for="passwordInput">
-          입장 비밀번호를 입력해 줘.
+          입장 비밀번호를 입력해 주세요.
         </label>
 
         <input
@@ -707,7 +707,7 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-        ♫ 음악 듣기
+        ♫ 테마 음악 듣기
       </a>
 
       <p class="hero-eyebrow">
@@ -753,7 +753,7 @@
         </div>
 
         <p class="archive-note">
-          기록을 선택하면 해당 회차로 이동할 수 있어.
+          버튼을 누르면 해당 회차로 이동할 수 있습니다.
         </p>
 
 
@@ -767,35 +767,35 @@
         <div class="episode-list" id="episodeList">
 
 
-          <!-- 최신화 예시 -->
+          <!-- 최신화 -->
           <article class="episode latest">
 
             <div class="episode-main">
               <span class="episode-number">01화</span>
 
               <span class="episode-title">
-                첫 번째 기록
+                최신화 바로 읽기 - 프롤로그
               </span>
 
               <a
                 class="episode-go"
                 href="#"
-                aria-label="1화 읽기"
+                aria-label="회차 읽기"
               >▶</a>
             </div>
 
             <details class="episode-info">
               <summary>
-                업로드 일자 및 소제목
+                ▶업로드 일자 및 소제목
               </summary>
 
               <div class="episode-info-content">
                 <span class="info-date">
-                  업로드 일자 : 2026. 00. 00.
+                  업로드 일자 : 2026. 10. 00.
                 </span>
 
                 <span>
-                  소제목 : 첫 번째 기록
+                  소제목 : 프롤로그
                 </span>
               </div>
             </details>
@@ -810,7 +810,7 @@
               <span class="episode-number">00화</span>
 
               <span class="episode-title">
-                회차 제목
+                작성중
               </span>
 
               <a
@@ -884,7 +884,7 @@
 
     // 음악 플레이리스트 주소
     // 아래 주소를 원하는 플레이리스트 URL로 바꿔 줘.
-    const PLAYLIST_URL = "https://www.youtube.com/";
+    const PLAYLIST_URL = "https://youtu.be/vcqYB2VYyNs?si=IkPrqCLb_l0OXQGq";
 
     // ========================================
     // PASSWORD GATE
@@ -910,7 +910,7 @@
         // 본문으로 이동하지 않고 상단부터 표시
         window.scrollTo(0, 0);
       } else {
-        passwordError.textContent = "비밀번호가 올바르지 않아.";
+        passwordError.textContent = "비밀번호가 올바르지 않습니다.";
         passwordInput.value = "";
         passwordInput.focus();
       }
